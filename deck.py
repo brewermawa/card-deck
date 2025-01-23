@@ -13,7 +13,7 @@ class Deck:
         faces = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"]
         suits = ["♦", "♠", "♥", "♣"]
 
-        self.deck = [Card(face, suit) for suit in suits for face in faces]
+        self.deck = [Card(face, suit) for suit in suits for face in faces] * number_of_decks
         self.shuffle()
 
     def draw(self):
