@@ -16,11 +16,17 @@ class Deck:
         self.deck = [Card(face, suit) for suit in suits for face in faces] * number_of_decks
         self.shuffle()
 
-    def draw(self):
-        return self.deck.pop()
+
+    def draw(self, num_cards=1):
+        """ if num_cards == 1:
+            return self.deck.pop()
+        else: """
+        return [self.deck.pop() for _ in range(num_cards)]
+
 
     def shuffle(self):
         random.shuffle(self.deck)
+
     
     def cards_left(self):
         return len(self.deck)
