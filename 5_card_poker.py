@@ -38,15 +38,13 @@ def check_poker(cards):
 
 
 
-#print_player_cards(player_cards)
-#print(check_pair(player_cards))
 
 pairs = 0
 two_pairs = 0
 trips = 0
 poker = 0
 
-for _ in range(100000):
+for _ in range(10000):
     playing_deck = Deck(1)
     player_cards = playing_deck.draw(5)
 
