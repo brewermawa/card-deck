@@ -2,6 +2,7 @@ from collections import Counter
 from deck import Deck
 import sys
 
+
 def is_consecutive(values):
     for i in range(1, len(values)):
         if values[i] - values[i-1] == 1:
@@ -9,6 +10,7 @@ def is_consecutive(values):
                 return True
         else:
             return False
+
 
 def straight(faces):
     #faces = ["10", "K", "A", "Q", "J"]
@@ -92,11 +94,21 @@ def result(cards):
 
     return 0
 
-#playing_deck = Deck(1)
-#player_cards = playing_deck.draw(5)
 
+def play(number_of_hands):
+    results = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0}
 
-i = 0
+    for i in range(number_of_hands):
+        sys.stdout.write(f"Hand: {i}\r")
+        sys.stdout.flush()
+        
+        playing_deck = Deck(1)
+        r = result(playing_deck.draw(5))
+        results[r] += 1
+
+    return results
+
+""" i = 0
 
 while True:
     i += 1
@@ -114,6 +126,6 @@ while True:
 
     if i == 1000000:
         print("A million hands and still no royal flush")
-        break
+        break """
 
 #print(f"Result: {r}")
