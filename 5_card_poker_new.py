@@ -1,67 +1,47 @@
 from collections import Counter
 from deck import Deck
+import sys
+
+def is_consecutive(values):
+    for i in range(1, len(values)):
+        if values[i] - values[i-1] == 1:
+            if i == len(values) - 1:
+                return True
+        else:
+            return False
 
 def straight(faces):
-    #faces = ["5", "3", "A", "4", "6"]
-    
-    face_values = []
-    for face in faces:
-        if face == "J":
-            face_values.append(11)
-        elif face == "Q":
-            face_values.append(12)
-        elif face == "K":
-            face_values.append(13)
-        elif face == "A":
-            face_values.append(1)
-        else:
-            face_values.append(int(face))
+    #faces = ["10", "K", "A", "Q", "J"]
 
-    #print(faces)
+    #1. Convert the values of the cards faces to integers so its possible to sort (J=11, Q=12, K=13, A=1)
+    face_values_high_cards = {"J": 11, "Q": 12, "K": 13, "A": 1}
+    face_values = [face_values_high_cards[face] if face in face_values_high_cards else int(face) for face in faces]
+
+    #2. Sort the list
     face_values.sort()
-    #print(face_values)
 
-    for i in range(1, len(face_values)):
-        if face_values[i] != face_values[i - 1] + 1:
-            #print("No straight")
-            break
-        else:
-            return True
-            #print("STRAIGHT")
-            #break
-    
+    #3. Check if the list is consecutive
+    if is_consecutive(face_values):
+        return True
+
+    #4. If there are A's(1) in the list change their value to 14, sort, anch check if it is consecutive
     if 1 in face_values:
-        for i in range(0, len(face_values)-1):
-            if face_values[i] == 1:
-                face_values[i] = 14
-
-    face_values.sort()
-    #print(face_values)
-
-    for i in range(1, len(face_values)):
-        if face_values[i] != face_values[i - 1] + 1:
-            return False
-            #print("No straight")
-            #break
-        else:
-            continue
-
-    return True
+        face_values = [14 if face_values[i] == 1 else face_values[i] for i in range(len(face_values))]
+        face_values.sort()
+        return is_consecutive(face_values)
+    else:
+        return False
         
 
 def result(cards):
     faces = [card.face for card in cards]
     suits = [card.suit for card in cards]
 
-    faces = ["5", "8", "A", "4", "2"]
-    suits = ["♦", "♦", "♦", "♦", "♦"]
-
-    #print(faces)
-    #print(Counter(faces).items())
+    #faces = ["J", "Q", "K", "A", "10"]
+    #suits = ["♦", "♦", "F", "♦", "♦"]
 
     face_count = [v for _, v in Counter(faces).items()]
     
-    #print(face_count)
     """
         0: Nothing
         1: Pair
@@ -70,51 +50,70 @@ def result(cards):
         4: Straight
         5: Flush
         6: Full House
-        7: Four of a King
+        7: Four of a Kind
         8: Straight Flush
         9: Royal Flush
     """
-
     
-    #check for pair, if there is 1 pair check is there is a 3 of a kind, if there is, we have a full house
+    #Pair or Full House
     if face_count.count(2) == 1:
         return 6 if face_count.count(3) == 1 else 1
     
-    #check for 2 pairs
+    #Two pairs
     if face_count.count(2) == 2:
         return 2
 
-    #check for 3 of a kind (i already checked for a full house in ase of a pair, no need to check again)
-    if face_count.count(3) == 1:
+    #Three of a kind
+    if face_count.count(3):
         return 3
     
-    #check for poker
-    if face_count.count(4) == 1:
+    #Poker
+    if face_count.count(4):
         return 7
     
-
-    s = straight(faces)
-
     suits_count = [v for _, v in Counter(suits).items()]
 
-    if s:
-        if suits_count.count(5) == 1:
-            return 8
-        
+    #Royal Flush
+    #print(faces)
+    if sorted(faces) == ['10', 'A', 'J', 'K', 'Q'] and suits_count.count(5):
+        return 9
+
+    #Straight Flush
+    if straight(faces) and suits_count.count(5):
+        return 8
+    
+    #Straight
+    if straight(faces):
         return 4
+    
+    #Flush
+    if suits_count.count(5):
+        return 5 
 
-    if suits_count.count(5) == 1:
-        return 5
-        
-    
-    
     return 0
-    
-    
-    #print(suits)
 
-playing_deck = Deck(1)
-player_cards = playing_deck.draw(5)
+#playing_deck = Deck(1)
+#player_cards = playing_deck.draw(5)
 
-print(player_cards)
-print(f"Result: {result(player_cards)}")
+
+i = 0
+
+while True:
+    i += 1
+    sys.stdout.write(f"Hand: {i}\r")
+    sys.stdout.flush()
+    
+    playing_deck = Deck(1)
+    player_cards = playing_deck.draw(5)
+    r = result(player_cards)
+
+    if r == 9:
+        print(f"I took {i} hands to get a royal flush")
+        print(player_cards)
+        break
+
+    if i == 1000000:
+        print("A million hands and still no royal flush")
+        break
+
+#print(f"Result: {r}")

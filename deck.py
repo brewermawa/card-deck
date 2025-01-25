@@ -13,7 +13,7 @@ class Card:
 
 class Deck:
     def __init__(self, number_of_decks=1):
-        faces = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"]
+        faces = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"]
         suits = ["♦", "♠", "♥", "♣"]
 
         self.deck = [Card(face, suit) for suit in suits for face in faces] * number_of_decks
