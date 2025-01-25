@@ -8,6 +8,9 @@ class Card:
     def __str__(self):
         return f"{self.face}{self.suit}"
 
+    def __repr__(self):
+        return self.__str__()
+
 class Deck:
     def __init__(self, number_of_decks=1):
         faces = ["A", 2, 3, 4, 5, 6, 7, 8, 9, 10, "J", "Q", "K"]
@@ -18,9 +21,6 @@ class Deck:
 
 
     def draw(self, num_cards=1):
-        """ if num_cards == 1:
-            return self.deck.pop()
-        else: """
         return [self.deck.pop() for _ in range(num_cards)]
 
 
