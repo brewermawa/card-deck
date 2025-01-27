@@ -1,17 +1,18 @@
-import three_card_poker
+from three_card_poker import ThreeCardPoker
 
-"""
-    1. Deal three cards to the player
-    2. Deal three cards to the dealer
-    3. Check if fold or play
-    4. Check in dealer qualifies
-    5. Compare player and dealer hands
-"""
+tcp = ThreeCardPoker()
 
-player, dealer = three_card_poker.deal()
+dealer, player = tcp.draw()
 
-#print(f"Dealer: {dealer}")
-print(f"Player: {player}")
+#print(f"Dealer cards: {dealer}")
+print(f"Player cards: {player}")
 
-print("Play") if three_card_poker.play(player) else print ("Fold")
 
+while True:
+    tcp = ThreeCardPoker()
+
+    dealer, player = tcp.draw()
+
+    print(f"Player cards: {player}")
+    if tcp.play(player):
+        break

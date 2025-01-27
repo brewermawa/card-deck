@@ -1,4 +1,98 @@
+from collections import Counter
 from deck import Deck
+
+class ThreeCardPoker:
+    def __init__(self):
+        self.deck = Deck()
+
+    
+    def draw(self):
+        return self.deck.draw(3), self.deck.draw(3)
+    
+
+    def is_consecutive(self, values):
+        for i in range(1, len(values)):
+            if values[i] - values[i-1] == 1:
+                if i == len(values) - 1:
+                    return True
+            else:
+                return False
+
+
+    def _pair_(self, cards):
+        faces = [card.face for card in cards]
+        if 2 in [v for _, v in Counter(faces).items()]:
+            return True
+        return False
+
+
+    def _three_of_a_kind_(self, cards):
+        faces = [card.face for card in cards]
+        if 3 in [v for _, v in Counter(faces).items()]:
+            return True
+        return False
+
+
+    def _straight_(self, cards):
+        faces = [card.face for card in cards]
+
+        #1. Convert the values of the cards faces to integers so its possible to sort (J=11, Q=12, K=13, A=1)
+        face_values_high_cards = {"J": 11, "Q": 12, "K": 13, "A": 1}
+        face_values = [face_values_high_cards[face] if face in face_values_high_cards else int(face) for face in faces]
+
+        #2. Sort the list
+        face_values.sort()
+
+        #3. Check if the list is consecutive
+        if self.is_consecutive(face_values):
+            return True
+        
+        #4. If there are A's(1) in the list change their value to 14, sort, anch check if it is consecutive
+        if 1 in face_values:
+            face_values = [14 if face_values[i] == 1 else face_values[i] for i in range(len(face_values))]
+            face_values.sort()
+            return self.is_consecutive(face_values)
+        else:
+            return False
+
+
+    def _flush_(self, cards):
+        suits = [card.suit for card in cards]
+        if 3 in [v for _, v in Counter(suits).items()]:
+            return True
+        return False
+
+
+    def straight_flush(self):
+        pass
+
+
+    def mini_royal(self):
+        pass
+
+
+    def play(self, cards):
+        if self._flush_(cards):
+            print("Flush")
+        if self._straight_(cards):
+            print("Straight")
+        elif self._three_of_a_kind_(cards):
+            print("Three of a kind")
+            return True
+        elif self._pair_(cards):
+            print("Pair")
+
+
+
+    def dealer_qualifies(self):
+        pass
+
+
+    def player_wins(self):
+        pass
+
+
+
 
 
 def deal():
@@ -8,9 +102,9 @@ def deal():
 
 
 def play(cards):
-    faces = [card.face for card in cards]
+    faces = [card.face for card in cards] 
     
-    faces = ["3", "6", "Q"]
+    #faces = ["3", "6", "Q"]
 
 
     if any([True for face in faces if face in ["K", "A"]]):
