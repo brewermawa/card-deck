@@ -6,7 +6,7 @@ class ThreeCardPoker:
         self.deck = Deck()
 
     
-    def draw(self):
+    def deal(self):
         return self.deck.draw(3), self.deck.draw(3)
     
 
@@ -63,29 +63,55 @@ class ThreeCardPoker:
         return False
 
 
-    def straight_flush(self):
-        pass
+    def _straight_flush_(self, cards):
+        if self._straight_(cards) and self._flush_(cards):
+            return True
+        return False
 
 
-    def mini_royal(self):
-        pass
+    def _mini_royal_(self, cards):
+        faces = [card.face for card in cards]
+        if sorted(faces) == ["A", "K", "Q"] and self._flush_(cards):
+            return True
+        return False
+
+
+    def _high_card_play_(self, cards):
+        faces = [card.face for card in cards] 
+    
+        if any([True for face in faces if face in ["K", "A"]]):
+            return True
+        elif "Q" in faces:
+            faces.remove("Q")
+            if any([True for face in faces if face in ["7", "8", "9", "10", "J", "Q"]]):
+                return True
+            if "6" in faces:
+                faces.remove("6")
+                return True if faces[0] in ["4", "5"] else False
+            else:
+                return False
+        else:
+            return False
 
 
     def play(self, cards):
-        if self._flush_(cards):
-            print("Flush")
-        if self._straight_(cards):
-            print("Straight")
-        elif self._three_of_a_kind_(cards):
-            print("Three of a kind")
-            return True
-        elif self._pair_(cards):
-            print("Pair")
+        hand_check = any([
+           self._mini_royal_(cards),
+           self._straight_flush_(cards),
+           self._flush_(cards),
+           self._straight_(cards),
+           self._three_of_a_kind_(cards),
+           self._pair_(cards),
+           self._high_card_play_(cards),
+        ])
 
+        return hand_check
 
-
-    def dealer_qualifies(self):
-        pass
+        
+    def dealer_qualifies(self, cards):
+        faces = [card.face for card in cards] 
+    
+        return any([True for face in faces if face in ["Q", "K", "A"]])
 
 
     def player_wins(self):

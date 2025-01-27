@@ -1,18 +1,22 @@
+import sys
 from three_card_poker import ThreeCardPoker
 
-tcp = ThreeCardPoker()
+play = 0
+fold = 0
+i = 0
 
-dealer, player = tcp.draw()
+for _ in range(1000):
+    i += 1
+    sys.stdout.write(f"Hand: {i}\r")
+    sys.stdout.flush()
 
-#print(f"Dealer cards: {dealer}")
-print(f"Player cards: {player}")
-
-
-while True:
     tcp = ThreeCardPoker()
+    dealer, player = tcp.deal()
 
-    dealer, player = tcp.draw()
-
-    print(f"Player cards: {player}")
     if tcp.play(player):
-        break
+        play += 1
+    else:
+        fold += 1
+
+print(f"Folded: {fold}")
+print(f"Played: {play}")
