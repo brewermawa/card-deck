@@ -109,40 +109,25 @@ class ThreeCardPoker:
 
         
     def dealer_qualifies(self, cards):
-        faces = [card.face for card in cards] 
+        faces = [card.face for card in cards]
+        hand_check = any([
+           self._mini_royal_(cards),
+           self._straight_flush_(cards),
+           self._flush_(cards),
+           self._straight_(cards),
+           self._three_of_a_kind_(cards),
+           self._pair_(cards),
+           any([True for face in faces if face in ["Q", "K", "A"]])
+        ])
     
-        return any([True for face in faces if face in ["Q", "K", "A"]])
+        return hand_check
 
 
-    def player_wins(self):
+    #compare hands
+    def compare_hands(self, player_hand, dealer_hand):
         pass
 
 
+    def win_amount(self, player_hand):
+        pass
 
-
-
-def deal():
-    playing_deck = Deck()
-    
-    return playing_deck.draw(3), playing_deck.draw(3)
-
-
-def play(cards):
-    faces = [card.face for card in cards] 
-    
-    #faces = ["3", "6", "Q"]
-
-
-    if any([True for face in faces if face in ["K", "A"]]):
-        return True
-    elif "Q" in faces:
-        faces.remove("Q")
-        if any([True for face in faces if face in ["7", "8", "9", "10", "J", "Q"]]):
-            return True
-        if "6" in faces:
-            faces.remove("6")
-            return True if faces[0] in ["4", "5"] else False
-        else:
-            return False
-    else:
-        return False
