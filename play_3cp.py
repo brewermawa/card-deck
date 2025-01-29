@@ -1,5 +1,5 @@
 import sys
-from three_card_poker import ThreeCardPoker
+from three_card_poker import ThreeCardPoker, Hand
 
 """
     1. Ask for initial bank
@@ -17,8 +17,6 @@ from three_card_poker import ThreeCardPoker
                         12. If player wins, get pay amount, add it to bank, end hand
 """
 
-tcp = ThreeCardPoker()
-
 #1. Ask for initial bank (assume integer, will add error handling later)
 #bank = int(input("Enter initial bank: "))
 bank = 1000
@@ -27,11 +25,32 @@ bank = 1000
 #ante = int(input("Enter ante: "))
 ante = 5
 
+
+tcp = ThreeCardPoker()
+
 #3. Deal cards to player and dealer
+dealer = Hand(tcp.deal())
+player = Hand(tcp.deal())
 
-dealer, player = tcp.deal()
 
-#4. Check if player plays or folds
+dealer.cards[0].face = "K"
+dealer.cards[0].suit = "♦"
+dealer.cards[1].face = "K"
+dealer.cards[1].suit = "♥"
+dealer.cards[2].face = "K"
+dealer.cards[2].suit = "♥"
+
+player.cards[0].face = "J"
+player.cards[0].suit = "♥"
+player.cards[1].face = "J"
+player.cards[1].suit = "♥"
+player.cards[2].face = "J"
+player.cards[2].suit = "♣"
+
+print(f"Dealer: {dealer.cards}")
+print(f"Player: {player.cards}")
+
+#4. Check if player.cards plays or folds
 if not(tcp.play(player)):
     #5. If player folds deduct ante amount from bank, end hand
     bank -= ante
@@ -46,15 +65,34 @@ else:
         #10. Set addional bet equal to ante amount
         bet = ante
 
-        player_wins = tcp.compare_hands(player, dealer)
+        result = tcp.compare_hands(player, dealer)
 
-        if not(player_wins):
+        if result == 0:
             #11. If dealer wins, deduct ante and bet amount from bank, end hand
             bank -= (ante + bet)
-        else:
+        elif result == 1:
             #12. If player wins, get pay amount, add it to bank, end hand
-            bank += ante
-            bank += tcp.win_amount(player)
+            bank += (ante + bet)
+        else:
+            #It is a tie
+            pass
+
+
+print(f"Dealer hand rank: {dealer.cards} {dealer.rank}")
+print(f"Player hand rank: {player.cards} {player.rank}")
+print(f"Bank: {bank}")
+
+
+
+
+
+
+
+
+
+
+
+
 
 """ play = 0
 fold = 0
