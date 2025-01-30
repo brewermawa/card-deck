@@ -25,68 +25,73 @@ bank = 1000
 #ante = int(input("Enter ante: "))
 ante = 5
 
+for _ in range(100000):
 
-tcp = ThreeCardPoker()
+    tcp = ThreeCardPoker()
 
-#3. Deal cards to player and dealer
-dealer = Hand(tcp.deal())
-player = Hand(tcp.deal())
+    #3. Deal cards to player and dealer
+    dealer = Hand(tcp.deal())
+    player = Hand(tcp.deal())
 
 
-dealer.cards[0].face = "7"
-dealer.cards[0].suit = "♥"
-dealer.cards[1].face = "K"
-dealer.cards[1].suit = "♥"
-dealer.cards[2].face = "5"
-dealer.cards[2].suit = "♥"
+    """ dealer.cards[0].face = "7"
+    dealer.cards[0].suit = "♥"
+    dealer.cards[1].face = "K"
+    dealer.cards[1].suit = "♥"
+    dealer.cards[2].face = "5"
+    dealer.cards[2].suit = "♥"
 
-player.cards[0].face = "2"
-player.cards[0].suit = "♦"
-player.cards[1].face = "8"
-player.cards[1].suit = "♠"
-player.cards[2].face = "6"
-player.cards[2].suit = "♥"
+    player.cards[0].face = "2"
+    player.cards[0].suit = "♦"
+    player.cards[1].face = "8"
+    player.cards[1].suit = "♠"
+    player.cards[2].face = "6"
+    player.cards[2].suit = "♥" """
 
-#print(f"Dealer: {dealer.cards}")
-#print(f"Player: {player.cards}")
+    #print(f"Dealer: {dealer.cards}")
+    #print(f"Player: {player.cards}")
 
-#4. Check if player.cards plays or folds
-if not(tcp.play(player)):
-    #5. If player folds deduct ante amount from bank, end hand
-    bank -= ante
-else:
-    #7. Check if dealer qualifies
-    if not(tcp.dealer_qualifies(dealer)):
-        #8. If dealer does not qualify add ante amount to bank, end hand
-        bank += ante + ante * tcp.ante_bonus(player)
-
+    #4. Check if player.cards plays or folds
+    if not(tcp.play(player)):
+        #5. If player folds deduct ante amount from bank, end hand
+        bank -= ante
     else:
-        #9. If dealer qualifies
-
-        #10. Set addional bet equal to ante amount
-        bet = ante
-
-        result = tcp.compare_hands(player, dealer)
-
-        if result == 0:
-            #11. If dealer wins, deduct ante and bet amount from bank, end hand
-            bank -= (ante + bet)
+        #7. Check if dealer qualifies
+        if not(tcp.dealer_qualifies(dealer)):
+            #8. If dealer does not qualify add ante amount to bank, end hand
             bank += ante + ante * tcp.ante_bonus(player)
 
-        elif result == 1:
-            #12. If player wins, get pay amount, add it to bank, end hand
-            bank += (ante + bet) + ante * tcp.ante_bonus(player)
         else:
-            #It is a tie
-            bank += ante * tcp.ante_bonus(player)
+            #9. If dealer qualifies
 
+            #10. Set addional bet equal to ante amount
+            bet = ante
+
+            result = tcp.compare_hands(player, dealer)
+
+            if result == 0:
+                #11. If dealer wins, deduct ante and bet amount from bank, end hand
+                bank -= (ante + bet)
+
+                if tcp.ante_bonus(player):
+                    bank += ante + ante * tcp.ante_bonus(player)
+
+            elif result == 1:
+                #12. If player wins, get pay amount, add it to bank, end hand
+                bank += (ante + bet) + ante * tcp.ante_bonus(player)
+            else:
+                #It is a tie
+                bank += ante * tcp.ante_bonus(player)
+
+    #print(f"Dealer hand rank: {dealer.cards} {dealer.rank}")
+    #print(f"Player hand rank: {player.cards} {player.rank}")    
+    #print(f"Bank: {bank}")
     
-    
+print("")
+print(f"Bank final: {bank}")
 
 
-print(f"Dealer hand rank: {dealer.cards} {dealer.rank}")
-print(f"Player hand rank: {player.cards} {player.rank}")
-print(f"Bank: {bank}")
+
 
 
 
