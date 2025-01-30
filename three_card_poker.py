@@ -156,9 +156,9 @@ class ThreeCardPoker:
             player_faces = [card.face for card in player_hand.cards]
             dealer_faces = [card.face for card in dealer_hand.cards]
 
-            print("----------")
-            print(f"Dealer faces: {dealer_faces}")
-            print(f"Player faces: {player_faces}")
+            #print("----------")
+            #print(f"Dealer faces: {dealer_faces}")
+            #print(f"Player faces: {player_faces}")
 
             face_values_high_cards = {"J": 11, "Q": 12, "K": 13, "A": 14}
             dealer_face_values = sorted([face_values_high_cards[face] if face in face_values_high_cards else int(face) for face in dealer_faces])
@@ -200,7 +200,38 @@ class ThreeCardPoker:
                     return 1
                 
                 return 2
+
+            if player_hand.rank == 2:
+                dealer_face_values.reverse()
+                player_face_values.reverse()
+
+                for i in range(len(player_face_values)):
+                    if dealer_face_values[i] > player_face_values[i]:
+                        return 0
+                    if dealer_face_values[i] < player_face_values[i]:
+                        return 1    
+                return 2
             
+            if player_hand.rank == 3 or player_hand.rank == 5:
+                #dealer_face_values.reverse()
+                #player_face_values.reverse()
+
+                #If there is an A on a hand, check if there is a 2, if there is, change the 14 to a 1
+                if 14 in dealer_face_values and 2 in dealer_face_values:
+                    dealer_face_values[dealer_face_values.index(14)] = 1
+                    dealer_face_values.sort()
+
+                if 14 in player_face_values and 2 in player_face_values:
+                    player_face_values[player_face_values.index(14)] = 1
+                    player_face_values.sort()
+                
+                if dealer_face_values[0] > player_face_values[0]:
+                    return 0
+                elif dealer_face_values[0] < player_face_values[0]:
+                    return 1
+                
+                return 2
+
             if player_hand.rank == 4:
                 #Both dealer and player have a three of a kind
             
@@ -208,3 +239,12 @@ class ThreeCardPoker:
                     return 0
                 
                 return 1
+            
+
+    """
+    Regardless of the dealer's hand, if the player has a straight, three of a kind or a
+    straight flush, the player gets an ante bonus
+    """
+    def ante_bonus(self, hand):
+        rank_values = {3: 1, 4: 4, 5: 5}
+        return rank_values.get(hand.rank, 0)
