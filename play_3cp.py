@@ -19,13 +19,13 @@ from three_card_poker import ThreeCardPoker, Hand
 
 #1. Ask for initial bank (assume integer, will add error handling later)
 #bank = int(input("Enter initial bank: "))
-bank = 1000
+bank = 100
 
 #2. Ask for ante amount 
 #ante = int(input("Enter ante: "))
 ante = 5
 
-for _ in range(100000):
+for _ in range(50):
 
     tcp = ThreeCardPoker()
 
@@ -83,9 +83,9 @@ for _ in range(100000):
                 #It is a tie
                 bank += ante * tcp.ante_bonus(player)
 
-    #print(f"Dealer hand rank: {dealer.cards} {dealer.rank}")
-    #print(f"Player hand rank: {player.cards} {player.rank}")    
-    #print(f"Bank: {bank}")
+    print(f"Dealer hand rank: {dealer.cards} {dealer.rank}")
+    print(f"Player hand rank: {player.cards} {player.rank}")    
+    print(f"Bank: {bank}")
     
 print("")
 print(f"Bank final: {bank}")
